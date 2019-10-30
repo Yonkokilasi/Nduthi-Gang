@@ -9,17 +9,17 @@ class StateWidget extends StatefulWidget {
 
   StateWidget({@required this.child, this.state});
 
-  static _StateWidgetState of(BuildContext context) {
+  static StateWidgetState of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(_StateDataWidget)
             as _StateDataWidget)
         .data;
   }
 
   @override
-  State<StatefulWidget> createState() => new _StateWidgetState();
+  State<StatefulWidget> createState() => new StateWidgetState();
 }
 
-class _StateWidgetState extends State<StateWidget> {
+class StateWidgetState extends State<StateWidget> {
   StateModel state;
 
   @override
@@ -49,7 +49,7 @@ class _StateWidgetState extends State<StateWidget> {
 }
 
 class _StateDataWidget extends InheritedWidget {
-  final _StateWidgetState data;
+  final StateWidgetState data;
 
   _StateDataWidget({
     Key key,
