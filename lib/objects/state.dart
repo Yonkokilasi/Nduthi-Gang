@@ -19,6 +19,7 @@ class StateModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// start timer
   void start() {
     if (_timer != null) return;
     _timer = Timer.periodic(Duration(seconds: 1), _onTick);
@@ -27,6 +28,7 @@ class StateModel with ChangeNotifier {
     notifyListeners();
   }
 
+  /// stop timer
   void stop() {
     _timer?.cancel();
     _timer = null;
@@ -34,7 +36,8 @@ class StateModel with ChangeNotifier {
     _currentDuration = _watch.elapsed;
     notifyListeners();
   }
-
+  
+  /// reset timer
   void reset() {
     stop();
     _watch.reset();

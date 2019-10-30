@@ -38,14 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('${appState.currentDuration}'),
-            RaisedButton(
-              onPressed: !appState.isRunning ? appState.start : appState.stop,
-              child: Text(!appState.isRunning ? 'Start' : 'Stop'),
+            Text(
+              '${appState.currentDuration}',
+              style: TextStyle(fontSize: 11),
             ),
-            RaisedButton(
-              onPressed: appState.reset,
-              child: Text('Reset'),
+            Visibility(
+              visible: false,
+              child: RaisedButton(
+                onPressed: !appState.isRunning ? appState.start : appState.stop,
+                child: Text(!appState.isRunning ? 'Start' : 'Stop'),
+              ),
+            ),
+            Visibility(
+              visible: false,
+              child: RaisedButton(
+                onPressed: appState.reset,
+                child: Text('Reset'),
+              ),
             )
           ],
         );
@@ -53,25 +62,29 @@ class _HomeScreenState extends State<HomeScreen> {
     ));
   }
 
-  Widget _buildRoundedRect() {
-    return Container(
-      width: 300,
-      height: 300,
-      margin: EdgeInsets.only(left: 40),
-      padding: EdgeInsets.all(20.0),
-      child: Column(
-        children: <Widget>[
-          Text("Duration"),
-          _buildTimer(),
-        ],
+  Widget _buildRoundedRect(double width, String text) {
+    return Material(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(11.0),
       ),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0), color: Colors.white),
+      child: Container(
+        width: width,
+        height: 70,
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            Text("$text"),
+            _buildTimer(),
+          ],
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    var width = 120.0;
+    var offset = width - 16;
     appState = StateWidget.of(context).state;
     return SafeArea(
       child: Scaffold(
@@ -85,16 +98,23 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 child: Text("Maps go here"),
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.6,
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.2,
                 color: colorSecondary,
                 child: Container(
-                  child: Row(
+                  margin: EdgeInsets.only(top: 30, left: 40),
+                  child: Stack(
                     children: <Widget>[
-                      _buildRoundedRect(),
+                      Positioned(
+                          left: offset,
+                          child: _buildRoundedRect(width, "Duration")),
+                      Positioned(
+                          left: offset * 2,
+                          child: _buildRoundedRect(width, "Speed")),
+                      Positioned(child: _buildRoundedRect(width, "Distance")),
                     ],
                   ),
                 ),
