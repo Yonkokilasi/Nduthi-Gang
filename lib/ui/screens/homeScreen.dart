@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nduthi_gang/bloc/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
+import 'package:nduthi_gang/utils/bottomNavigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -102,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.2,
+                height: MediaQuery.of(context).size.height * 0.22,
                 color: colorSecondary,
                 child: Container(
                   margin: EdgeInsets.only(top: 30, left: 40),
@@ -122,6 +119,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        bottomNavigationBar: bottomNav(),
+        floatingActionButton: new FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: colorPrimary,
+          child: Icon(Icons.motorcycle),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
