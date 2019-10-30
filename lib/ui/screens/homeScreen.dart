@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.22,
+                height: MediaQuery.of(context).size.height * 0.199,
                 color: colorSecondary,
                 child: Container(
                   margin: EdgeInsets.only(top: 30, left: 40),
@@ -120,10 +120,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         bottomNavigationBar: bottomNav(),
-        floatingActionButton: new FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: colorPrimary,
-          child: Icon(Icons.motorcycle),
+        floatingActionButton: Container(
+          height: 77.0,
+          width: 77.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: colorPrimary,
+              mini: false,
+              materialTapTargetSize: MaterialTapTargetSize.padded,
+              child: Icon(
+                Icons.motorcycle,
+                size: 40,
+              ),
+            ),
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),

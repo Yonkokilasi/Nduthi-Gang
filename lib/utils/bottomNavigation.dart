@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 Widget bottomNav() {
   return BottomAppBar(
     child: Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(18.0),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
