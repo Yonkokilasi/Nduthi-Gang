@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nduthi_gang/bloc/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/utils/bottomNavigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
-import 'package:nduthi_gang/utils/strings.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -14,6 +14,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   StateModel appState;
   StateWidgetState _bloc;
+  GoogleMapController mapController;
+  final LatLng _center = const LatLng(-1.2855928, 36.8191551);
 
   @override
   void didChangeDependencies() {
@@ -79,6 +81,17 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  Widget _buildMapWidget() {
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(target: _center, zoom: 14.0),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = 120.0;
@@ -93,8 +106,10 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.white,
           child: Column(
             children: <Widget>[
+
+              /// Map area
               Container(
-                child: Text("Maps go here"),
+                child: _buildMapWidget(),
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.58,
               ),
@@ -133,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 child: IconButton(
                   onPressed: () {},
+
                   /// to do replace with custom
                   icon: new Icon(Icons.motorcycle),
                 )),
