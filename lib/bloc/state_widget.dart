@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nduthi_gang/objects/state.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class StateWidget extends StatefulWidget {
@@ -36,6 +37,15 @@ class StateWidgetState extends State<StateWidget> {
     }
   }
 
+    Future<void> askPermissions() async {
+     Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.locationAlways]);
+     
+  }
+
+  Future<void> checkPermissionStatus() async {
+    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
+
+  }
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<StateModel>(

@@ -1,9 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nduthi_gang/bloc/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/utils/bottomNavigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -27,6 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _bloc.dispose();
     super.dispose();
+  }
+  @override
+  Future<void> initState() { 
+    super.initState();
+
   }
 
   Widget _buildTimer() {
@@ -86,14 +94,21 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildMapWidget() {
+    _bloc.askPermissions();
     return GoogleMap(
+      myLocationButtonEnabled: true,
+      myLocationEnabled: true,
+      trafficEnabled: true,
+      compassEnabled: true,
       onMapCreated: _onMapCreated,
       initialCameraPosition: CameraPosition(target: _center, zoom: 14.0),
-    );
+    )
+  ;
   }
 
   @override
   Widget build(BuildContext context) {
+       
     var width = 120.0;
     var offset = width - 16;
     appState = StateWidget.of(context).state;
@@ -117,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
               /// Distance Duration Speed container
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.199,
+                height: MediaQuery.of(context).size.height * 0.198,
                 color: colorSecondary,
                 child: Container(
                   margin: EdgeInsets.only(top: 30, left: 20),
