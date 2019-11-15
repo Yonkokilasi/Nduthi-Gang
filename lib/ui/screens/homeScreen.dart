@@ -3,6 +3,7 @@ import 'package:nduthi_gang/bloc/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/utils/bottomNavigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
+import 'package:nduthi_gang/utils/strings.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -95,14 +96,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 child: Text("Maps go here"),
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.6,
+                height: MediaQuery.of(context).size.height * 0.58,
               ),
+
+              /// Distance Duration Speed container
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.199,
                 color: colorSecondary,
                 child: Container(
-                  margin: EdgeInsets.only(top: 30, left: 40),
+                  margin: EdgeInsets.only(top: 30, left: 20),
                   child: Stack(
                     children: <Widget>[
                       Positioned(
@@ -125,15 +128,14 @@ class _HomeScreenState extends State<HomeScreen> {
           width: 77.0,
           child: FittedBox(
             child: FloatingActionButton(
-              onPressed: () {},
-              backgroundColor: colorPrimary,
-              mini: false,
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-              child: Icon(
-                Icons.motorcycle,
-                size: 40,
-              ),
-            ),
+                onPressed: () {},
+                backgroundColor: colorPrimary,
+                materialTapTargetSize: MaterialTapTargetSize.padded,
+                child: IconButton(
+                  onPressed: () {},
+                  /// to do replace with custom
+                  icon: new Icon(Icons.motorcycle),
+                )),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
