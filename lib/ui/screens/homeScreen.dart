@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:nduthi_gang/bloc/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/utils/bottomNavigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   StateModel appState;
   StateWidgetState _bloc;
   GoogleMapController mapController;
-  final LatLng _center = const LatLng(-1.2855928, 36.8191551);
+  LatLng _center;
 
   @override
   void didChangeDependencies() {
@@ -28,11 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _bloc.dispose();
     super.dispose();
-  }
-
-  @override
-  Future<void> initState() {
-    super.initState();
   }
 
   Widget _buildTimer() {
@@ -99,22 +94,44 @@ class _HomeScreenState extends State<HomeScreen> {
         future: _bloc.checkPermissionStatus(),
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.hasData != null) {
-            return GoogleMap(
-              myLocationButtonEnabled: snapshot.data,
-              myLocationEnabled: snapshot.data,
-              trafficEnabled: true,
-              compassEnabled: true,
-              onMapCreated: _onMapCreated,
-              initialCameraPosition:
-                  CameraPosition(target: _center, zoom: 14.0),
-            );
+            /// we have location permissions
+            var showUserLocation = snapshot.data;
+            return FutureBuilder<LocationData>(
+                future: _bloc.getUserLocation(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data != null) {
+                    var lat = snapshot.data.latitude;
+                    var long = snapshot.data.longitude;
+
+                    // get user's location
+                    if (lat != null && long != null) {
+
+                      /// set initial position based on user's position
+                      _center = LatLng(lat, long);
+                    } 
+
+                    /// load google maps
+                    return GoogleMap(
+                      myLocationButtonEnabled: showUserLocation,
+                      myLocationEnabled: showUserLocation,
+                      trafficEnabled: true,
+                      compassEnabled: true,
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition:
+                          CameraPosition(target: _center, zoom: 14.0),
+                    );
+                  } else {
+                    return Text("Loading...");
+                  }
+                });
           } else {
+           
             return GoogleMap(
               trafficEnabled: true,
               compassEnabled: true,
               onMapCreated: _onMapCreated,
               initialCameraPosition:
-                  CameraPosition(target: _center, zoom: 14.0),
+                  CameraPosition(target: LatLng(-1.2855928, 36.8191551), zoom: 14.0),
             );
           }
         });
@@ -174,7 +191,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: colorPrimary,
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed:
+                      !appState.isRunning ? appState.start : appState.stop,
 
                   /// to do replace with custom
                   icon: new Icon(Icons.motorcycle),

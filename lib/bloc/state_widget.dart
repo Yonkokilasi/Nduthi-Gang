@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:location/location.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -38,9 +39,8 @@ class StateWidgetState extends State<StateWidget> {
   }
 
   Future<void> askPermissions() async {
-    Map<PermissionGroup, PermissionStatus> permissions =
-        await PermissionHandler()
-            .requestPermissions([PermissionGroup.locationAlways]);
+    await PermissionHandler()
+        .requestPermissions([PermissionGroup.locationAlways]);
   }
 
   Future<bool> checkPermissionStatus() async {
@@ -54,14 +54,23 @@ class StateWidgetState extends State<StateWidget> {
         break;
       case PermissionStatus.granted:
         {
+          state.locationPermissions = true;
+
           return true;
         }
         break;
+
       default:
         {
           return false;
         }
     }
+  }
+
+  Future<LocationData> getUserLocation() async {
+    var location = new Location();
+    state.userLocation = await location.getLocation();
+    return state.currentUserLocation;
   }
 
   @override
