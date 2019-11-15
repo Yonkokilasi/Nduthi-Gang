@@ -37,15 +37,33 @@ class StateWidgetState extends State<StateWidget> {
     }
   }
 
-    Future<void> askPermissions() async {
-     Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.locationAlways]);
-     
+  Future<void> askPermissions() async {
+    Map<PermissionGroup, PermissionStatus> permissions =
+        await PermissionHandler()
+            .requestPermissions([PermissionGroup.locationAlways]);
   }
 
-  Future<void> checkPermissionStatus() async {
-    PermissionStatus permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.contacts);
-
+  Future<bool> checkPermissionStatus() async {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.locationAlways);
+    switch (permission) {
+      case PermissionStatus.denied:
+        {
+          return false;
+        }
+        break;
+      case PermissionStatus.granted:
+        {
+          return true;
+        }
+        break;
+      default:
+        {
+          return false;
+        }
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<StateModel>(
