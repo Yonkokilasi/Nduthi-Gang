@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nduthi_gang/ui/screens/homeScreen.dart';
+import 'package:nduthi_gang/ui/screens/home_screen.dart';
 
 class Nduthi extends StatelessWidget {
   @override

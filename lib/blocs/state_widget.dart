@@ -70,7 +70,7 @@ class StateWidgetState extends State<StateWidget> {
   Future<LocationData> getUserLocation() async {
     var location = new Location();
     state.userLocation = await location.getLocation();
-    return state.currentUserLocation;
+    return state.userLocation;
   }
 
   @override

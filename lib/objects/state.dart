@@ -5,25 +5,19 @@ import 'package:flutter/material.dart';
 class StateModel with ChangeNotifier {
   Stopwatch _watch;
   Timer _timer;
-  bool _locationPermissions ;
-  LocationData _userLocation;
+  bool locationPermissions ;
+  LocationData userLocation;
+  Duration currentDuration = Duration.zero;
 
-  Duration get currentDuration => _currentDuration;
-  Duration _currentDuration = Duration.zero;
-  bool get isRunning => _timer != null;
-  bool get locationPermissions => _locationPermissions;
-  LocationData get currentUserLocation => _userLocation;
-
-  set locationPermissions(bool locationPermission) => _locationPermissions = locationPermission;
-  set userLocation(LocationData userLocation) => _userLocation = userLocation;
-
+ bool get isRunning => _timer != null;
+ 
   StateModel() {
     _watch = Stopwatch();
-    _locationPermissions = false;
+    locationPermissions = false;
   }
 
   void _onTick(Timer timer) {
-    _currentDuration = _watch.elapsed;
+    currentDuration = _watch.elapsed;
     notifyListeners();
   }
 
@@ -41,7 +35,7 @@ class StateModel with ChangeNotifier {
     _timer?.cancel();
     _timer = null;
     _watch.stop();
-    _currentDuration = _watch.elapsed;
+    currentDuration = _watch.elapsed;
     notifyListeners();
   }
 
@@ -49,7 +43,7 @@ class StateModel with ChangeNotifier {
   void reset() {
     stop();
     _watch.reset();
-    _currentDuration = Duration.zero;
+    currentDuration = Duration.zero;
     notifyListeners();
   }
 }
