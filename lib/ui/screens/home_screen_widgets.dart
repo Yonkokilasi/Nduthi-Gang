@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
 import 'package:nduthi_gang/blocs/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/ui/screens/home_screen.dart';
 import 'package:nduthi_gang/utils/colors.dart';
 
-  Widget buildRoundedRect(double width, String text,StateModel appState) {
-    return Material(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(11.0),
-      ),
+Widget buildRoundedRect(double width, String text, StateModel appState) {
+  return Material(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(11.0),
+    ),
+    child: GestureDetector(
+      onLongPress: appState.reset,
       child: Container(
         width: width,
         height: 70,
@@ -23,8 +26,31 @@ import 'package:nduthi_gang/utils/colors.dart';
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
+Widget buildRoundedRect2(double width, String text, String value) {
+  return Material(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(11.0),
+    ),
+    child: Container(
+      width: width,
+      height: 70,
+      padding: EdgeInsets.all(16.0),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "$text",
+            style: TextStyle(fontSize: 12),
+          ),
+          Text("$value"),
+        ],
+      ),
+    ),
+  );
+}
 
 Widget buildTimer(StateModel appState) {
   return Center(
@@ -45,7 +71,7 @@ Widget buildTimer(StateModel appState) {
   ));
 }
 
-Widget buildMapWidget(StateWidgetState _bloc) {
+Widget buildMapWidget(StateWidgetState _bloc, StateModel provider) {
   LatLng _center;
   _bloc.askPermissions();
 
@@ -56,11 +82,14 @@ Widget buildMapWidget(StateWidgetState _bloc) {
         if (snapshot.hasData && snapshot.hasData != null) {
           /// we have location permissions
           var showUserLocation = snapshot.data;
-          return FutureBuilder<LocationData>(
+          return FutureBuilder<Position>(
               future: _bloc.getUserLocation(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done ||
                     snapshot.hasData && snapshot.data != null) {
+                  // set speed
+                  provider.speed = snapshot.data.speed;
+
                   var lat = snapshot.data.latitude;
                   var long = snapshot.data.longitude;
 
@@ -97,4 +126,9 @@ Widget buildMapWidget(StateWidgetState _bloc) {
           );
         }
       });
+}
+
+Future<bool> createToast(String message) {
+  return Fluttertoast.showToast(
+      msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.TOP);
 }

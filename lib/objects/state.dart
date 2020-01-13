@@ -1,19 +1,44 @@
 import 'dart:async';
-import 'package:location/location.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class StateModel with ChangeNotifier {
   Stopwatch _watch;
   Timer _timer;
-  bool locationPermissions ;
-  LocationData userLocation;
+  bool _locationPermissions = false;
+  Position _userLocation;
+  double _speed = 0.0;
+  double _distanceTravelled = 0.0;
   Duration currentDuration = Duration.zero;
 
- bool get isRunning => _timer != null;
- 
+  bool get locationPermissions => _locationPermissions;
+  bool get isRunning => _timer != null;
+  double get speed => _speed;
+  double get distanceTravelled => _distanceTravelled;
+  Position get userLocation => _userLocation;
+
+  set locationPermissions(bool locationPermissions) {
+    _locationPermissions = locationPermissions;
+    notifyListeners();
+  }
+
+  set speed(double speed) {
+    _speed = speed;
+    notifyListeners();
+  }
+
+  set distanceTravelled(double distanceTravelled) {
+    _distanceTravelled = distanceTravelled;
+    notifyListeners();
+  }
+
+  set userLocation(Position location) {
+    _userLocation = location;
+    notifyListeners();
+  }
+
   StateModel() {
     _watch = Stopwatch();
-    locationPermissions = false;
   }
 
   void _onTick(Timer timer) {

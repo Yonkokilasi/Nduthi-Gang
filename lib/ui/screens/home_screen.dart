@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nduthi_gang/blocs/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/ui/screens/home_screen_widgets.dart';
 import 'package:nduthi_gang/utils/bottom_navigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -17,6 +21,8 @@ class HomeScreenState extends State<HomeScreen> {
   StateWidgetState _bloc;
   GoogleMapController mapController;
   LatLng center;
+  Geolocator location;
+  StreamSubscription<Position> positionStream;
 
   @override
   void didChangeDependencies() {
@@ -27,6 +33,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _bloc.dispose();
+    positionStream.cancel();
     super.dispose();
   }
 
@@ -34,23 +41,75 @@ class HomeScreenState extends State<HomeScreen> {
     mapController = controller;
   }
 
-  void _doManageTimer() {
-    if (!appState.isRunning) {
-      appState.start();
+  void _doManageTimer(StateModel provider) {
+    if (!provider.isRunning) {
+      provider.start();
     } else {
-      appState.stop();
+      provider.stop();
     }
+  }
+
+  @override
+  void initState() {
+    location = Geolocator();
+    super.initState();
+  }
+
+  void setUpLocationListener(StateModel provider) {
+   
+    var locationOptions = LocationOptions(accuracy: LocationAccuracy.high);
+
+    positionStream = location
+        .getPositionStream(locationOptions)
+        .listen((Position position) {});
+    positionStream.onData((position) {
+      if (provider.userLocation == null) {
+        location
+            .getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.bestForNavigation)
+            .then((position) {
+          provider.userLocation = position;
+        });
+      }
+
+      var prevLocation = provider.userLocation;
+      var newLocation = position;
+
+      if (prevLocation.latitude != null) {
+        // get distance travelled
+        location
+            .distanceBetween(prevLocation.latitude, prevLocation.longitude,
+                newLocation.latitude, newLocation.longitude)
+            .then((distance) {
+          // set distance travelled
+          provider.distanceTravelled = distance;
+         
+        });
+
+        // set current location
+        provider.userLocation = newLocation;
+
+        // set current speed
+        //provider.speed = position.speed;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var width = 120.0;
     var offset = width - 16;
-    appState = StateWidget.of(context).state;
+    var provider = Provider.of<StateModel>(context);
+    setUpLocationListener(provider);
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Nduthi"),
+          title: GestureDetector(
+              onTap: () {
+                setState(() {});
+              },
+              child: Text("Nduthi")),
         ),
         body: Container(
           color: Colors.white,
@@ -58,9 +117,9 @@ class HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               /// Map area
               Container(
-                child: buildMapWidget(_bloc),
+                child: buildMapWidget(_bloc, provider),
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.57,
+                height: MediaQuery.of(context).size.height * 0.54,
               ),
 
               /// Distance Duration Speed container
@@ -69,17 +128,19 @@ class HomeScreenState extends State<HomeScreen> {
                 height: MediaQuery.of(context).size.height * 0.198,
                 color: colorSecondary,
                 child: Container(
-                  margin: EdgeInsets.only(top: 30, left: 30),
+                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
                   child: Stack(
                     children: <Widget>[
                       Positioned(
                           left: offset,
-                          child: buildRoundedRect(width, "Duration", appState)),
-                      // Positioned(
-                      //     left: offset * 2,
-                      //     child: buildRoundedRect(width, "Speed", appState)),
-                      // Positioned(
-                      //     child: buildRoundedRect(width, "Distance", appState)),
+                          child: buildRoundedRect(width, "Duration", provider)),
+                      Positioned(
+                          left: offset * 2,
+                          child: buildRoundedRect2(width, "Speed",
+                              "${(provider.speed * 3.6).toStringAsFixed(1)} km/h")),
+                      Positioned(
+                          child: buildRoundedRect2(width, "Distance",
+                              "${provider.distanceTravelled} m")),
                     ],
                   ),
                 ),
@@ -97,7 +158,9 @@ class HomeScreenState extends State<HomeScreen> {
                 backgroundColor: colorPrimary,
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 child: IconButton(
-                  onPressed: _doManageTimer,
+                  onPressed: () {
+                    _doManageTimer(provider);
+                  },
 
                   /// to do replace with custom
                   icon: Icon(Icons.motorcycle),
