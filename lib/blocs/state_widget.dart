@@ -14,8 +14,7 @@ class StateWidget extends StatefulWidget {
   StateWidget({@required this.child, this.state});
 
   static StateWidgetState of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(_StateDataWidget)
-            as _StateDataWidget)
+    return (context.dependOnInheritedWidgetOfExactType<_StateDataWidget>())
         .data;
   }
 
@@ -41,18 +40,21 @@ class StateWidgetState extends State<StateWidget> {
       DeviceOrientation.portraitDown,
     ]);
     Wakelock.enable();
-    askPermissions();
     if (widget.state != null) {
       state = widget.state;
     } else {
       state = new StateModel();
     }
+    if (!state.locationPermissions)
+      askPermissions();
+    else
+      getUserLocation();
   }
 
   Future<void> askPermissions() async {
     await PermissionHandler()
         .requestPermissions([PermissionGroup.locationAlways]);
-        await checkPermissionStatus();
+    await checkPermissionStatus();
   }
 
   Future<bool> checkPermissionStatus() async {
@@ -84,14 +86,14 @@ class StateWidgetState extends State<StateWidget> {
   Future<Position> getUserLocation() async {
     state.userLocation = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-   
+
     return state.userLocation;
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<StateModel>(
-      builder: (BuildContext context) => StateModel(),
+      create: (BuildContext context) => StateModel(),
       child: new _StateDataWidget(
         data: this,
         child: widget.child,

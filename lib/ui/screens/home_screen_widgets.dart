@@ -73,7 +73,7 @@ Widget buildTimer(StateModel appState) {
 
 Widget buildMapWidget(StateWidgetState _bloc, StateModel provider) {
   LatLng _center;
-  _bloc.askPermissions();
+  if (!provider.locationPermissions) _bloc.askPermissions();
 
   // build based on permissions check
   return FutureBuilder<bool>(
