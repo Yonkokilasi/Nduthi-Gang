@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nduthi_gang/blocs/state_widget.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/ui/screens/home_screen_widgets.dart';
+import 'package:nduthi_gang/ui/screens/search.dart';
 import 'package:nduthi_gang/utils/bottom_navigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +57,6 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   void setUpLocationListener(StateModel provider) {
-   
     var locationOptions = LocationOptions(accuracy: LocationAccuracy.high);
 
     positionStream = location
@@ -83,14 +83,13 @@ class HomeScreenState extends State<HomeScreen> {
             .then((distance) {
           // set distance travelled
           provider.distanceTravelled = distance;
-         
         });
 
         // set current location
         provider.userLocation = newLocation;
 
         // set current speed
-        //provider.speed = position.speed;
+        // provider.speed = position.speed;
       }
     });
   }
@@ -105,6 +104,18 @@ class HomeScreenState extends State<HomeScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  Navigator.pushNamed(context, SearchScreen.routeName);
+                },
+              ),
+            )
+          ],
           title: GestureDetector(
               onTap: () {
                 setState(() {});

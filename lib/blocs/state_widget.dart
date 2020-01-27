@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mapbox_search/mapbox_search.dart';
 import 'package:nduthi_gang/objects/state.dart';
 import 'package:nduthi_gang/ui/screens/home_screen_widgets.dart';
 import 'package:permission_handler/permission_handler.dart';

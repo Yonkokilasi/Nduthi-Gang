@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mapbox_search/mapbox_search.dart';
 
 class StateModel with ChangeNotifier {
   Stopwatch _watch;
@@ -10,7 +11,12 @@ class StateModel with ChangeNotifier {
   double _speed = 0.0;
   double _distanceTravelled = 0.0;
   Duration currentDuration = Duration.zero;
+  MapBoxStaticImage staticImage = MapBoxStaticImage(
+      apiKey:
+      _apiKey);
 
+  static const String _apiKey = "pk.eyJ1IjoieW9ua29raWxhc2kiLCJhIjoiY2s1YXRmdHZvMDYyaTNrbzVlbmRwamdheiJ9.Ad52SqvVY_Tv65cbJEvskQ";
+  String get apiKey => _apiKey;
   bool get locationPermissions => _locationPermissions;
   bool get isRunning => _timer != null;
   double get speed => _speed;
