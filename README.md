@@ -1,6 +1,6 @@
 # nduthi_gang
 
-An app to track your motorcycle rides
+An app to track your motorcycle rides and keep in touch with the motorcycle community
 
 ## Getting Started
 
