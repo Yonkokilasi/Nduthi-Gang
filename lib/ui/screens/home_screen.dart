@@ -89,8 +89,8 @@ class HomeScreenState extends State<HomeScreen> {
         // set current location
         provider.userLocation = newLocation;
 
-        // set current speed
-        //provider.speed = position.speed;
+        // set current speed if timer is running
+        if(provider.isRunning) provider.speed = position.speed;
       }
     });
   }

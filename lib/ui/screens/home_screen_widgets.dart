@@ -87,8 +87,8 @@ Widget buildMapWidget(StateWidgetState _bloc, StateModel provider) {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done ||
                     snapshot.hasData && snapshot.data != null) {
-                  // set speed
-                  provider.speed = snapshot.data.speed;
+                  //TODO set speed
+                  //provider.speed = snapshot.data.speed;
 
                   var lat = snapshot.data.latitude;
                   var long = snapshot.data.longitude;
