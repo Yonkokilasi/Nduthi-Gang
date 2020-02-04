@@ -10,7 +10,6 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     return Material(
       child: Container(
-        color: Colors.white,
         child: Column(
           children: <Widget>[
             Container(
