@@ -5,6 +5,8 @@ import 'package:nduthi_gang/utils/bottomNavigation.dart';
 import 'package:nduthi_gang/utils/colors.dart';
 import 'package:nduthi_gang/utils/strings.dart';
 
+import 'accountScreen.dart';
+
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
 
@@ -132,7 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: colorPrimary,
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) => AccountScreen()
+                    ));
+                  },
                   /// to do replace with custom
                   icon: new Icon(Icons.motorcycle),
                 )),
